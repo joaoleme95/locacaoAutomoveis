@@ -1,0 +1,61 @@
+-- Criação da tabela veiculos
+CREATE TABLE veiculos (
+    cod_locacao INT PRIMARY KEY,
+    veiculo VARCHAR(50),
+    cor VARCHAR(50),
+    placa VARCHAR(10),
+    diaria DECIMAL(9, 2),
+    cliente_nome VARCHAR(50),
+    cpf_cliente VARCHAR(50),
+    nascimento_cliente DATE,
+    dia INT,
+    total DECIMAL(9, 2)
+);
+
+-- Tabela normalizada: cliente
+CREATE TABLE cliente (
+    cpf_cliente VARCHAR(50) PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    nascimento DATE
+);
+
+-- Tabela veiculo
+CREATE TABLE veiculo (
+    cod_locacao INT PRIMARY KEY,
+    veiculo VARCHAR(50),
+    cor VARCHAR(50),
+    placa VARCHAR(50),
+    diaria DECIMAL(9, 2),
+    cpf_cliente VARCHAR(50),
+    dia INT,
+    total DECIMAL(9, 2),
+    FOREIGN KEY (cpf_cliente) REFERENCES cliente(cpf_cliente)
+);
+
+-- Inserindo registros na tabela cliente
+INSERT INTO cliente (cpf_cliente, nome, nascimento) VALUES
+    ('123.456.789-01', 'Jose', '2022-05-21'),
+    ('543.765.987-23', 'Norma', '2002-04-29'),
+    ('987.654.321-90', 'Ricardo', '2001-10-12'),
+    ('432.765.678-67', 'Sandro', '1998-12-14'),
+    ('927.384.284-44', 'Luxa', '1984-11-26');
+
+-- Inserindo registros na tabela veiculo
+INSERT INTO veiculo (veiculo, cor, placa, diaria, cpf_cliente, dia, total) VALUES
+    ('Gol', 'Preto', 'WER-3456', 30.00, '123.456.789-01', 3, 90.00),
+    ('I8', 'Rosa', 'FDS-8384', 60.00, '543.765.987-23', 7, 420.00),
+    ('Camaro', 'Preto', 'CVB-9933', 20.00, '987.654.321-90', 1, 20.00),
+    ('Celta', 'Azul', 'FGH-2256', 30.00, '123.456.789-01', 3, 90.00),
+    ('Brasilia', 'Amarela', 'DDI-3948', 45.00, '927.384.284-44', 7, 315.00);
+
+-- Verificando registros na tabela veiculo
+SELECT * FROM veiculo;
+
+/* Crie uma view que seleciona todas as locações e seus respectivos veículos e clientes. */
+CREATE VIEW Todas_locacoes AS
+SELECT * FROM veiculo
+JOIN cliente ON cliente.cpf_cliente = veiculo.cpf_cliente;
+
+-- Selecionando registros da view Todas_locacoes
+SELECT * FROM Todas_locacoes;
+
